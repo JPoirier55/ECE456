@@ -1,11 +1,25 @@
 
-from cipher_utils import *
+"""
+Author: Jake Poirier
+Date: 1/25/2016
+Class: ECE456
+Assignment: Lab 1
+"""
 
-KEY = [1, 1, 1, 1, 1, 1, 1, 1]
+
+from cipher_utils import *
+import argparse
+
 SPACE = [0, 0, 1, 0, 0, 0, 0, 0]
 
 
-def decrypt(raw_data):
+def decrypt(raw_data, key):
+    """
+    Decrypts data from a file and writes it to another file
+    :param raw_data: incoming data that has been read from a text file
+    :param key: list of bits that correspond to the algorithms key
+    :return: list of bits that have been decrypted
+    """
     decrypted_bits = []
     byte_list = []
     bits = tobits(raw_data)
@@ -16,13 +30,13 @@ def decrypt(raw_data):
 
         if len(block_16.bit_string) == 16:
             split_bits = split(block_16.bit_string, 8)
-            xor_bits = xor(split_bits[1], KEY)
+            xor_bits = xor(split_bits[1], key)
             new_bytes = xor_bits + split_bits[0]
             byte_list.append(new_bytes)
 
         elif len(block_16.bit_string) == 8:
             block_8 = BlockObject(block_16.bit_string)
-            xor_bits = xor(block_8.bit_string, KEY)
+            xor_bits = xor(block_8.bit_string, key)
             new_bytes = xor_bits + SPACE
             byte_list.append(new_bytes)
         else:
@@ -31,19 +45,27 @@ def decrypt(raw_data):
     for bytes in byte_list:
         decrypted_bits += bytes
 
-    return decrypted_bits
+    text_decrypted = frombits(decrypted_bits)
+    return text_decrypted
+
 
 def main():
+    """
+    Main access point for running from terminal commands
+    Can use python decrypt.py -h for help with commands
+    :return: none
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument('--inputfile', help='use --inputfile <filename>', required=True)
     parser.add_argument('--outputfile', help='use --outputfile <filename>', required=True)
+    parser.add_argument('--keyfile', help='use --keyfile <filename>', required=True)
 
     args = parser.parse_args()
 
+    key = read_key(args.keyfile)
     input_message = read_file(args.inputfile)
-    bits_encrypted = decrypt(input_message)
-    text_encrypted = frombits(bits_encrypted)
-    write_file(args.outputfile, text_encrypted)
+    text_decrypted = decrypt(input_message, key)
+    write_file(args.outputfile, text_decrypted)
 
 if __name__ == '__main__':
     sys.exit(main())
