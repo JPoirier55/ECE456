@@ -7,6 +7,8 @@ Assignment: Lab 1
 """
 
 import sys
+import random
+import string
 
 
 class BlockObject:
@@ -23,23 +25,49 @@ class BlockObject:
 
 class FormatError(Exception):
     """
-    Base class for exceptions in this module
+    Base format class for exceptions in this module
     """
     pass
 
 
-def read_key(filename):
+class FileError(IOError):
+    """
+    Base File error class for exceptions in this module
+    """
+    pass
+
+
+def read_key_file(filename):
     """
     Parses the data from a key file and puts it into correct format
     :param filename: filename of the key for encryption
     :return: list of bits corresponding to key
     """
-    key_raw = read_file(filename)
-    key_raw = key_raw.split(',')
-    key = []
-    for bit in key_raw:
-        key.append(int(bit))
-    return key
+    keys_raw = read_file(filename)
+    keys_raw = keys_raw.split(',')
+    keys = []
+    for char in keys_raw:
+        keys.append(tobits(char))
+    return keys
+
+
+def key_gen(iterations, keyfilename):
+    """
+    Creates a file with a certain number of elements for encryption iterations
+    :param iterations: Number of iterations of encryption
+    :param keyfilename: name of the key file produced
+    :return:
+    """
+    key_list = ''
+    for index in range(iterations):
+        char_gen = random.choice(string.letters)
+        if index == iterations - 1:
+            key_list += char_gen
+        else:
+            key_list += char_gen + ','
+
+    write_file(keyfilename, key_list)
+    return key_list
 
 
 def read_file(filename):
@@ -51,10 +79,10 @@ def read_file(filename):
     """
     data = None
     try:
-        with open(filename, 'r') as file_read:
-            data = file_read.read()
+        file_read = open(filename, 'r')
+        data = file_read.read()
     except IOError, e:
-        sys.stderr('File {0} has occured an error:'.format(filename, e))
+        raise FileError('File {0} has occured an error: {1}'.format(filename, e))
     return data
 
 
@@ -124,5 +152,3 @@ def xor(bits, key):
     """
     return [int(bool(bits[index]) != bool(key[index])) for index in range(len(bits))]
 
-if __name__ == "__main__":
-    read_key('key.txt')
