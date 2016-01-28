@@ -58,14 +58,19 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--inputfile', help='use --inputfile <filename>', required=True)
     parser.add_argument('--outputfile', help='use --outputfile <filename>', required=True)
-    parser.add_argument('--keyfile', help='use --keyfile <filename>', required=True)
+    parser.add_argument('--keyfilename', help='use --keyfilename <filename>', required=True)
 
     args = parser.parse_args()
 
-    key = read_key(args.keyfile)
+    key = read_key_file(args.keyfilename)
+    iterations = len(key)
+
+    key = read_key_file(args.keyfilename)
     input_message = read_file(args.inputfile)
-    text_decrypted = decrypt(input_message, key)
-    write_file(args.outputfile, text_decrypted)
+
+    for iteration in reversed(range(iterations)):
+        input_message = decrypt(input_message, key[iteration])
+        write_file(args.outputfile, input_message)
 
 if __name__ == '__main__':
     sys.exit(main())
