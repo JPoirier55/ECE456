@@ -152,3 +152,4 @@ def xor(bits, key):
     """
     return [int(bool(bits[index]) != bool(key[index])) for index in range(len(bits))]
 
+
