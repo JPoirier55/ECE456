@@ -123,6 +123,6 @@ def main():
     # print "{0:#0{1}x}".format(checksum, 6)[2:]
 
     with open(datagram_filename, 'wb+') as f:
-        f.write(datagram)
+        f.write(hex(int(datagram,2))[2:])
 if __name__ == '__main__':
     sys.exit(main())
