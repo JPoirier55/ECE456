@@ -95,7 +95,7 @@ def main():
     print datagram
     datagram += '00000000'
     print 'add zeroes', datagram
-    datagram += "{0:#0{1}b}".format(17, 18)[2:]
+    datagram += "{0:#0{1}b}".format(17, 10)[2:]
     print datagram
     datagram += tobits_inline(str(len(split(data, 16)) + 8))
     print datagram
@@ -130,6 +130,6 @@ def main():
 
     with open(datagram_filename, 'wb+') as f:
         f.write(bytedatagram)
-
+    print checksum
 if __name__ == '__main__':
     sys.exit(main())
