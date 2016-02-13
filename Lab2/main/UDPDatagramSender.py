@@ -122,7 +122,14 @@ def main():
     print checksum
     # print "{0:#0{1}x}".format(checksum, 6)[2:]
 
+    datagram = split(datagram, 8)
+    print datagram
+    bytedatagram = ''
+    for byte in datagram:
+         bytedatagram += "{0:#0{1}x}".format(int(byte, 2), 4)[2:]
+
     with open(datagram_filename, 'wb+') as f:
-        f.write(hex(int(datagram,2))[2:])
+        f.write(bytedatagram)
+
 if __name__ == '__main__':
     sys.exit(main())
