@@ -94,18 +94,17 @@ def main():
     datagram += dest_ip_bin
     print datagram
     datagram += '00000000'
-    print datagram
-    datagram += tobits_inline('17')
+    print 'add zeroes', datagram
+    datagram += "{0:#0{1}b}".format(17, 18)[2:]
     print datagram
     datagram += tobits_inline(str(len(split(data, 16)) + 8))
     print datagram
     datagram += tobits_inline(source_port)
     print datagram
     datagram += tobits_inline(dest_port)
-    # print datagram
-    print len(split(data, 8)) + 8
-    # print 8 + len(split(data, 16))
-    datagram += int(len(split(data, 16)) + 8, 2)
+    print datagram
+    # print "{0:#0{1}b}".format(len(split(data, 16)), 10)
+    datagram += "{0:#0{1}b}".format(len(split(data, 16)), 10)[2:]
 
     print datagram
     datagram += '0000000000000000'
@@ -117,10 +116,13 @@ def main():
     # print checksum
     checksum = "{0:#0{1}b}".format(checksum, 18)[2:]
     print datagram
-    datagram = datagram[:144] + checksum + datagram[150:]
+    print checksum
+    datagram = datagram[:144] + checksum + datagram[160:]
     print datagram
     print checksum
     # print "{0:#0{1}x}".format(checksum, 6)[2:]
 
+    with open(datagram_filename, 'wb+') as f:
+        f.write(datagram)
 if __name__ == '__main__':
     sys.exit(main())
