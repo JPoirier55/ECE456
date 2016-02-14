@@ -92,7 +92,7 @@ def main():
     source_port = args.sourcePort
     dest_port = args.destinationPort
     datagram_filename = args.datagramFilename
-    datagram_file = args.inputfile
+    datagram_file = read_file(args.inputfile)
 
     pseudo_header = ''
     datagram = ''
@@ -110,7 +110,9 @@ def main():
     print 'Add protocol 17:', datagram
     pseudo_header += "{0:#0{1}x}".format(len(datagram_file) + 8, 6)[2:]
     print 'Total length:   ', datagram
+    print pseudo_header
     datagram += pseudo_header
+    print datagram
     datagram += "{0:#0{1}x}".format(int(source_port), 6)[2:]
     print 'Source port:    ', datagram
     datagram += "{0:#0{1}x}".format(int(dest_port), 6)[2:]
@@ -126,10 +128,11 @@ def main():
     print hex(checksum)
 
     # checksum = "{0:#0{1}b}".format(checksum, 18)[2:]
-    # print datagram
+    print datagram
     # print checksum
-    datagram = datagram[:18] + hex(checksum) + datagram[22:]
-    bytedata = bytearray(datagram)
+    datagram = datagram[:18] + hex(checksum)[2:] + datagram[22:]
+    print datagram
+    # print bin(int(datagram, 16))[2:].zfill(8)
     # print datagram
     # print checksum
     # print "{0:#0{1}x}".format(checksum, 6)[2:]
@@ -142,7 +145,7 @@ def main():
     #
     # datagram_filename.write(bytedata)
     with open(datagram_filename, 'wb') as f:
-        f.write(bytedata)
+        f.write(datagram)
     # print checksum
 if __name__ == '__main__':
     sys.exit(main())
