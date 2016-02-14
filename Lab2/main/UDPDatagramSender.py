@@ -132,7 +132,7 @@ def main():
     # print checksum
     datagram = datagram[:18] + hex(checksum)[2:] + datagram[22:]
     print datagram
-    # datag =  bin(int(datagram, 16))[2:].zfill(8)
+    datag =  bin(int(datagram, 16))[2:].zfill(8)
     # print datagram
     # print checksum
     # print "{0:#0{1}x}".format(checksum, 6)[2:]
@@ -144,10 +144,12 @@ def main():
     #      bytedatagram += "{0:#0{1}x}".format(int(byte, 2), 4)[2:]
     #
     # datagram_filename.write(bytedata)
-    datagram = binascii.hexlify(datagram)
-    print datagram
-    with open(datagram_filename, 'wb') as f:
-        f.write(datagram)
+    # datagram = binascii.hexlify(datagram)
+    # print datagram
+
+    print datag
+    with open("datagram.bin", 'wb') as f:
+        f.write('000' + datag)
     # print checksum
 if __name__ == '__main__':
     sys.exit(main())
