@@ -133,7 +133,9 @@ def main():
     # print checksum
     # datagram = datagram[:18] + hex(checksum)[2:] + datagram[22:]
     print datagram
-    datag =  bin(int(datagram, 16))[2:].zfill(8)
+    test = '8fa094260a0000006262'
+    datag =  bin(int(test, 16))[2:].zfill(8)
+    print datag
     # print datagram
     # print checksum
     # print "{0:#0{1}x}".format(checksum, 6)[2:]
@@ -151,12 +153,12 @@ def main():
         f.write(datag)
     # print checksum
     import mimetypes
-    textchars = bytearray({7,8,9,10,12,13,27} | set(range(0x20, 0x100)) - {0x7f})
-    is_binary_string = lambda bytes: bool(bytes.translate(None, textchars))
-
-    print is_binary_string(open('datagram.bin', 'rb').read())
-
-
-    print mimetypes.guess_type("datagram.bin")
+    # textchars = bytearray({7,8,9,10,12,13,27} | set(range(0x20, 0x100)) - {0x7f})
+    # is_binary_string = lambda bytes: bool(bytes.translate(None, textchars))
+    #
+    # print is_binary_string(open('datagram.bin', 'rb').read())
+    #
+    #
+    # print mimetypes.guess_type("datagram.bin")
 if __name__ == '__main__':
     sys.exit(main())
