@@ -92,7 +92,7 @@ def main():
     source_port = args.sourcePort
     dest_port = args.destinationPort
     datagram_filename = args.datagramFilename
-    datagram_file = read_file(args.inputfile)
+    datagram_file = args.inputfile
 
     pseudo_header = ''
     datagram = ''
@@ -119,19 +119,17 @@ def main():
     print 'Total len:      ', datagram
     # print data
     datagram += tohex_inline(datagram_file)
-    print tohex_inline(datagram_file)
     # print 'Adding data:    ', datagram
     checksum = compute_checksum(datagram)
     # datagram += hex(checksum)
-<<<<<<< HEAD
-    print hex(checksum)
-=======
 
->>>>>>> ee9b9853a74e3119f9df211a8b6dd2dede385ad4
+    print hex(checksum)
+
     # checksum = "{0:#0{1}b}".format(checksum, 18)[2:]
     # print datagram
     # print checksum
     datagram = datagram[:18] + hex(checksum) + datagram[22:]
+    bytedata = bytearray(datagram)
     # print datagram
     # print checksum
     # print "{0:#0{1}x}".format(checksum, 6)[2:]
@@ -142,8 +140,9 @@ def main():
     # for byte in datagram:
     #      bytedatagram += "{0:#0{1}x}".format(int(byte, 2), 4)[2:]
     #
-    with open(datagram_filename +'.bin', 'wb+') as f:
-        f.write(datagram)
+    # datagram_filename.write(bytedata)
+    with open(datagram_filename, 'wb') as f:
+        f.write(bytedata)
     # print checksum
 if __name__ == '__main__':
     sys.exit(main())
