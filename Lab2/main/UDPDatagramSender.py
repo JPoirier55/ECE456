@@ -122,12 +122,12 @@ def main():
     print tohex_inline(datagram_file)
     # print 'Adding data:    ', datagram
     checksum = compute_checksum(datagram)
-    print hex(checksum)
+    # datagram += hex(checksum)
 
     # checksum = "{0:#0{1}b}".format(checksum, 18)[2:]
     # print datagram
     # print checksum
-    # datagram = datagram[:144] + checksum + datagram[160:]
+    datagram = datagram[:18] + hex(checksum) + datagram[22:]
     # print datagram
     # print checksum
     # print "{0:#0{1}x}".format(checksum, 6)[2:]
