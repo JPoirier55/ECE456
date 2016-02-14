@@ -6,8 +6,8 @@ from udp_utils import *
 import binascii
 
 
-def convert_ip_binary(ip):
-    return ''.join(bin(int(x)+256)[3:] for x in reversed(ip.split('.')))
+def convert_ip_hex(ip):
+    return ''.join(hex(int(x)+256)[3:] for x in reversed(ip.split('.')))
 
 def padZeroes(hexNum):
     if len(hexNum) == 8:
@@ -33,6 +33,18 @@ def tobits_inline(raw_string):
             result += b
     return result
 
+def tohex_inline(raw_string):
+    result = ''
+    for c in raw_string:
+        bits = hex(ord(c))[2:]
+        bits = '00'[len(bits):] + bits
+        for b in bits:
+            result += b
+    return result
+
+
+
+
 def split(bits, size):
     """
     Splits a list of bits into two lists of certain size
@@ -43,10 +55,10 @@ def split(bits, size):
     return [bits[i:i+size] for i in xrange(0, len(bits), size)]
 
 def compute_checksum(data):
+    bits_data = bin(int(data, 16))[2:].zfill(8)
     sum_bits = '0'
-    for bits in split(data, 16):
+    for bits in split(bits_data, 16):
         sum_bits = bin(int(bits, 2) + int(sum_bits, 2))
-
         if len(bin(int(sum_bits, 2))[2:]) > 16:
             sum_bits = bin(int('1', 2) + int(sum_bits[2:], 2))
             sum_bits = sum_bits[3:]
@@ -82,54 +94,52 @@ def main():
     datagram_filename = args.datagramFilename
     datagram_file = read_file(args.inputfile)
 
-    dest_ip_bin = convert_ip_binary(dest_ip)
-    source_ip_bin = convert_ip_binary(source_ip)
-
+    pseudo_header = ''
     datagram = ''
     print datagram
 
-    data = tobits_inline(datagram_file)
-    datagram += source_ip_bin
-    print datagram
-    datagram += dest_ip_bin
-    print datagram
-    datagram += '00000000'
-    print 'add zeroes', datagram
-    datagram += "{0:#0{1}b}".format(17, 10)[2:]
-    print datagram
-    datagram += tobits_inline(str(len(split(data, 16)) + 8))
-    print datagram
-    datagram += tobits_inline(source_port)
-    print datagram
-    datagram += tobits_inline(dest_port)
-    print datagram
-    # print "{0:#0{1}b}".format(len(split(data, 16)), 10)
-    datagram += "{0:#0{1}b}".format(len(split(data, 16)), 10)[2:]
+    print len(datagram_file)
 
-    print datagram
-    datagram += '0000000000000000'
-    print datagram
+    pseudo_header += convert_ip_hex(source_ip)
+    print 'Source IP:      ', datagram
+    pseudo_header += convert_ip_hex(dest_ip)
+    print "Destination IP: ", datagram
+    pseudo_header += '00'
+    print 'Add zeroes:     ', datagram
+    pseudo_header += "{0:#0{1}x}".format(17, 4)[2:]
+    print 'Add protocol 17:', datagram
+    pseudo_header += "{0:#0{1}x}".format(len(datagram_file) + 8, 6)[2:]
+    print 'Total length:   ', datagram
+    datagram += pseudo_header
+    datagram += "{0:#0{1}x}".format(int(source_port), 6)[2:]
+    print 'Source port:    ', datagram
+    datagram += "{0:#0{1}x}".format(int(dest_port), 6)[2:]
+    print 'Desti. port:    ', datagram
+    datagram += "{0:#0{1}x}".format(len(datagram_file) + 8, 6)[2:]
+    print 'Total len:      ', datagram
     # print data
-    datagram += data
-    # print datagram
+    datagram += tohex_inline(datagram_file)
+    print tohex_inline(datagram_file)
+    # print 'Adding data:    ', datagram
     checksum = compute_checksum(datagram)
+    print hex(checksum)
+
+    # checksum = "{0:#0{1}b}".format(checksum, 18)[2:]
+    # print datagram
     # print checksum
-    checksum = "{0:#0{1}b}".format(checksum, 18)[2:]
-    print datagram
-    print checksum
-    datagram = datagram[:144] + checksum + datagram[160:]
-    print datagram
-    print checksum
+    # datagram = datagram[:144] + checksum + datagram[160:]
+    # print datagram
+    # print checksum
     # print "{0:#0{1}x}".format(checksum, 6)[2:]
 
-    datagram = split(datagram, 8)
-    print datagram
-    bytedatagram = ''
-    for byte in datagram:
-         bytedatagram += "{0:#0{1}x}".format(int(byte, 2), 4)[2:]
-
+    # datagram = split(datagram, 8)
+    # print datagram
+    # bytedatagram = ''
+    # for byte in datagram:
+    #      bytedatagram += "{0:#0{1}x}".format(int(byte, 2), 4)[2:]
+    #
     with open(datagram_filename, 'wb+') as f:
-        f.write(bytedatagram)
-    print checksum
+        f.write(datagram)
+    # print checksum
 if __name__ == '__main__':
     sys.exit(main())
