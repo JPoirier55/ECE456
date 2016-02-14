@@ -144,6 +144,8 @@ def main():
     #      bytedatagram += "{0:#0{1}x}".format(int(byte, 2), 4)[2:]
     #
     # datagram_filename.write(bytedata)
+    datagram = binascii.hexlify(datagram)
+    print datagram
     with open(datagram_filename, 'wb') as f:
         f.write(datagram)
     # print checksum
