@@ -111,7 +111,7 @@ def main():
     pseudo_header += "{0:#0{1}x}".format(len(datagram_file) + 8, 6)[2:]
     print 'Total length:   ', datagram
     print pseudo_header
-    datagram += pseudo_header
+    # datagram += pseudo_header
     print datagram
     datagram += "{0:#0{1}x}".format(int(source_port), 6)[2:]
     print 'Source port:    ', datagram
@@ -146,10 +146,18 @@ def main():
     # datagram_filename.write(bytedata)
     # datagram = binascii.hexlify(datagram)
     # print datagram
-
+    datag = datag.encode('utf-8')
     print datag
     with open("datagram.bin", 'wb') as f:
-        f.write('000' + datag)
+        f.write(datag)
     # print checksum
+    import mimetypes
+    textchars = bytearray({7,8,9,10,12,13,27} | set(range(0x20, 0x100)) - {0x7f})
+    is_binary_string = lambda bytes: bool(bytes.translate(None, textchars))
+
+    print is_binary_string(open('datagram.bin', 'rb').read())
+
+
+    print mimetypes.guess_type("datagram.bin")
 if __name__ == '__main__':
     sys.exit(main())
