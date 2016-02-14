@@ -119,6 +119,7 @@ def main():
     print 'Desti. port:    ', datagram
     datagram += "{0:#0{1}x}".format(len(datagram_file) + 8, 6)[2:]
     print 'Total len:      ', datagram
+    datagram += '0000'
     # print data
     datagram += tohex_inline(datagram_file)
     # print 'Adding data:    ', datagram
@@ -130,7 +131,7 @@ def main():
     # checksum = "{0:#0{1}b}".format(checksum, 18)[2:]
     print datagram
     # print checksum
-    datagram = datagram[:18] + hex(checksum)[2:] + datagram[22:]
+    # datagram = datagram[:18] + hex(checksum)[2:] + datagram[22:]
     print datagram
     datag =  bin(int(datagram, 16))[2:].zfill(8)
     # print datagram
@@ -146,8 +147,6 @@ def main():
     # datagram_filename.write(bytedata)
     # datagram = binascii.hexlify(datagram)
     # print datagram
-    datag = datag.encode('utf-8')
-    print datag
     with open("datagram.bin", 'wb') as f:
         f.write(datag)
     # print checksum
