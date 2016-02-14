@@ -123,7 +123,11 @@ def main():
     # print 'Adding data:    ', datagram
     checksum = compute_checksum(datagram)
     # datagram += hex(checksum)
+<<<<<<< HEAD
     print hex(checksum)
+=======
+
+>>>>>>> ee9b9853a74e3119f9df211a8b6dd2dede385ad4
     # checksum = "{0:#0{1}b}".format(checksum, 18)[2:]
     # print datagram
     # print checksum
