@@ -151,14 +151,7 @@ def main():
     # print datagram
     with open("datagram.bin", 'wb') as f:
         f.write(datag)
-    # print checksum
-    import mimetypes
-    # textchars = bytearray({7,8,9,10,12,13,27} | set(range(0x20, 0x100)) - {0x7f})
-    # is_binary_string = lambda bytes: bool(bytes.translate(None, textchars))
-    #
-    # print is_binary_string(open('datagram.bin', 'rb').read())
-    #
-    #
-    # print mimetypes.guess_type("datagram.bin")
+
+
 if __name__ == '__main__':
     sys.exit(main())
