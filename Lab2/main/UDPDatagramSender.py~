@@ -133,7 +133,7 @@ def main():
     # print checksum
     # datagram = datagram[:18] + hex(checksum)[2:] + datagram[22:]
     print datagram
-    test = '00010101010'
+    test = '0050001600ee237323134330a35'
     datag =  bin(int(test, 16))[2:].zfill(8)
     print datag
     # print datagram
