@@ -111,7 +111,7 @@ int main(int argc, char *argv[] )
   checksum = ip_checksum2(file_contents, input_file_size);
   printf("Checksum:  %x \n", checksum);
 
-  FILE* fp3 = fopen("tempfile", "w");
+  FILE* fp3 = fopen(argv[6], "w");
 
   // fclose(fp3);
 
