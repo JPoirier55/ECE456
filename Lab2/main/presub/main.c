@@ -34,8 +34,6 @@ uint16_t ip_checksum2(char* data, int length) {
     return ~acc;
 }
 
-int
-
 
 int main(int argc, char *argv[] )
 {
