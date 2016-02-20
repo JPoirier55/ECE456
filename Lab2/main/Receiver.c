@@ -6,6 +6,7 @@
 #include <string.h>
 #include <byteswap.h>
 #include <stdlib.h>
+#include <Python.h>
 
 
 uint16_t ip_checksum2(char* data, int length) {
@@ -114,7 +115,7 @@ int main(int argc, char *argv[])
 {
   if(argc != 7) return Usage(argv[0]);
 
-  FILE* input = fopen(argv[1], "r");
+  FILE* input = fopen(argv[3], "r");
 
   char line[80];
   fscanf(input, "%s", line);
